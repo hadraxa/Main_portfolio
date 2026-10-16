@@ -66,7 +66,7 @@ export default function SkillsSection() {
           {/* Quick Competency Badges */}
           <div className="flex flex-wrap gap-2 text-xs">
             <span className="px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-slate-300">
-              ⚡ 3+ Yrs Full Stack
+              ⚡ 5+ Yrs Full Stack
             </span>
             <span className="px-3 py-1.5 rounded-lg border border-cyan-500/20 bg-cyan-500/10 text-cyan-300">
               ☁️ Multi-Cloud (AWS/Azure)

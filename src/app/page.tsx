@@ -64,7 +64,7 @@ export default async function HomePage() {
 
               <div className="mt-10 grid grid-cols-3 gap-4 max-w-md">
                 {[
-                  { k: "3+", v: "Years exp." },
+                  { k: "5+", v: "Years exp." },
                   { k: "20+", v: "Projects" },
                   { k: "5★", v: "Client rating" },
                 ].map((s) => (

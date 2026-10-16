@@ -54,13 +54,20 @@ export default function SkillsGlobe({
 
   // Store refs so animation loop always has fresh state without re-creating listeners
   const activeCategoryRef = useRef(activeCategory);
-  activeCategoryRef.current = activeCategory;
-
   const activeSkillIdRef = useRef(activeSkillId);
-  activeSkillIdRef.current = activeSkillId;
-
   const isPausedRef = useRef(isPaused);
-  isPausedRef.current = isPaused;
+
+  useEffect(() => {
+    activeCategoryRef.current = activeCategory;
+  }, [activeCategory]);
+
+  useEffect(() => {
+    activeSkillIdRef.current = activeSkillId;
+  }, [activeSkillId]);
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

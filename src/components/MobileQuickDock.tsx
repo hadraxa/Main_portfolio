@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 /**
@@ -94,6 +94,15 @@ export default function MobileQuickDock() {
   const [isOpen, setIsOpen] = useState(false);
   const [closing, setClosing] = useState(false);
 
+  const close = useCallback(() => {
+    if (!isOpen) return;
+    setClosing(true);
+    setTimeout(() => {
+      setIsOpen(false);
+      setClosing(false);
+    }, 240);
+  }, [isOpen]);
+
   // Close with ESC key
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -101,17 +110,7 @@ export default function MobileQuickDock() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
-  const close = () => {
-    if (!isOpen) return;
-    setClosing(true);
-    setTimeout(() => {
-      setIsOpen(false);
-      setClosing(false);
-    }, 240);
-  };
+  }, [close, isOpen]);
 
   const toggle = () => {
     if (isOpen) close();
