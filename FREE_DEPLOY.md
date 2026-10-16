@@ -133,6 +133,8 @@ Once Render reports **Live**, use the HTTPS URL displayed on the service page. R
 
 In Render, open the service's **Environment** section and reveal **`ADMIN_PASSWORD`** to retrieve your generated password. The earlier preview password and Docker-local password do not apply to this deployment. There is no username.
 
+After Render assigns the service URL, optionally set `SITE_URL` in the service's Environment section to that exact HTTPS URL. Render's external URL is detected automatically, but an explicit value keeps canonical links and the sitemap tied to your chosen public address.
+
 Do not copy the generated password or session secret into a public file. To change a password, edit the environment variable in Render and redeploy; existing sessions are invalidated.
 
 Admin links remain hidden from the public UI. Hiding links is not access control: the login screen still exists and server-side authentication protects the dashboard/API.

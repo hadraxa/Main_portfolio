@@ -10,7 +10,7 @@ export const site = {
     telegram: "https://t.me/Ahadraza77987",
     whatsapp: "https://wa.me/923153980168",
     instagram: "https://www.instagram.com/ahadraza779857/",
-    portfolio: "https://ahad-raza.surge.sh",
+    portfolio: "https://ahadraxa.vercel.app",
   },
   tagline: "The Creator",
   summary:

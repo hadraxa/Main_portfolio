@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
@@ -5,8 +6,49 @@ import Footer from "@/components/Footer";
 import ProjectRepo from "@/components/ProjectRepo";
 import { getProjectBySlug, parseTags } from "@/lib/projects";
 import { highlight } from "@/lib/highlight";
+import { getMetaDescription } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await getProjectBySlug(slug);
+
+  if (!data) {
+    return {
+      title: "Project not found",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const { project } = data;
+  const description = getMetaDescription(
+    project.description || project.tagline
+  );
+
+  return {
+    title: project.title,
+    description,
+    alternates: {
+      canonical: `/projects/${project.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description,
+      url: `/projects/${project.slug}`,
+    },
+    twitter: {
+      card: "summary",
+      title: project.title,
+      description,
+    },
+  };
+}
 
 export default async function ProjectDetailPage({
   params,

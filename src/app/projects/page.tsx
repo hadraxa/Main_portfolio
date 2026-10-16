@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -6,6 +7,15 @@ import TiltCard from "@/components/TiltCard";
 import { getAllProjects, parseTags } from "@/lib/projects";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Browse web development projects by Ahad Raza, including applications built with React, Next.js, Node.js, and modern cloud technologies.",
+  alternates: {
+    canonical: "/projects",
+  },
+};
 
 export default async function ProjectsPage() {
   const projects = await getAllProjects();
