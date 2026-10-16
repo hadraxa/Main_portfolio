@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+@theme {
+  /* Extra small breakpoint for fine-tuning phone-only layouts (e.g. the nav) */
+  --breakpoint-xs: 420px;
+}
+
+:root {
+  --bg: #05070f;
+  --panel: #0b1020;
+  --accent: #a855f7;
+  --accent-2: #22d3ee;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(168, 85, 247, 0.18), transparent 60%),
+    radial-gradient(900px 700px at 100% 0%, rgba(34, 211, 238, 0.12), transparent 60%),
+    radial-gradient(700px 600px at 50% 100%, rgba(236, 72, 153, 0.10), transparent 60%),
+    #05070f;
+  background-attachment: fixed;
+}
+
+/* Glass panel */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.glow-border {
+  position: relative;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.7), rgba(34, 211, 238, 0.7), rgba(236, 72, 153, 0.7));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Grid backdrop */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.float { animation: float 6s ease-in-out infinite; }
+
+/* Reveal on scroll — 60 FPS hardware accelerated, zero scroll lag */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Code viewer */
+pre.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.hljs { color: #e2e8f0; background: transparent; }
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-type { color: #c084fc; }
+.hljs-string, .hljs-attr { color: #86efac; }
+.hljs-number, .hljs-symbol { color: #fbbf24; }
+.hljs-comment, .hljs-quote { color: #64748b; font-style: italic; }
+.hljs-function .hljs-title, .hljs-title.function_ { color: #22d3ee; }
+.hljs-title, .hljs-section, .hljs-name { color: #f472b6; }
+.hljs-built_in { color: #38bdf8; }
+.hljs-tag { color: #f87171; }
+.hljs-attr { color: #fbbf24; }
+.hljs-variable, .hljs-template-variable, .hljs-params { color: #e2e8f0; }
+.hljs-meta { color: #94a3b8; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.4); }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* =========================================================================
+   Social dock — animated gradient border (inspired by ahad-raza.surge.sh)
+   ========================================================================= */
+@keyframes sidebar-gradient-spin {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.gradient-border-dock {
+  background:
+    linear-gradient(#1a1d2e, #1a1d2e) padding-box,
+    linear-gradient(145deg, #e81cff, #4046ff, #22d3ee, #e81cff) border-box;
+  background-size: 100% 100%, 300% 300%;
+  border: 2px solid transparent;
+  animation: sidebar-gradient-spin 6s ease infinite;
+}
+
+@keyframes dock-slide-up {
+  from { opacity: 0; transform: translateY(24px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes dock-slide-down {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(24px) scale(0.9); }
+}
+.dock-open {
+  animation: dock-slide-up 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.dock-closing {
+  animation: dock-slide-down 0.25s ease both;
+}
+
+/* =========================================================================
+   Floating action button — pulse rings + orbiting glow
+   ========================================================================= */
+@keyframes fab-pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.7; }
+  70%  { transform: scale(1.6); opacity: 0;   }
+  100% { transform: scale(1.6); opacity: 0;   }
+}
+.fab-pulse-ring {
+  animation: fab-pulse-ring 2.4s cubic-bezier(0.24, 0.85, 0.55, 1) infinite;
+}
+.fab-pulse-ring-delay {
+  animation: fab-pulse-ring 2.4s cubic-bezier(0.24, 0.85, 0.55, 1) infinite;
+  animation-delay: 1.2s;
+}
+
+@keyframes fab-orbit-glow {
+  0%   { transform: rotate(0deg);   filter: hue-rotate(0deg); }
+  100% { transform: rotate(360deg); filter: hue-rotate(360deg); }
+}
+.fab-orbit-glow {
+  animation: fab-orbit-glow 6s linear infinite;
+}
+
+/* Floating chip that pops out one-by-one with a spring easing */
+@keyframes chip-pop-in {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.6); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.06); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes chip-pop-out {
+  0%   { opacity: 1; transform: translateY(0)    scale(1);    }
+  100% { opacity: 0; transform: translateY(28px) scale(0.6);  }
+}
+.chip-pop-in {
+  animation: chip-pop-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.chip-pop-out {
+  animation: chip-pop-out 0.22s ease both;
+}
+
+/* Backdrop for the dock */
+@keyframes dock-backdrop-in {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to   { opacity: 1; backdrop-filter: blur(6px); }
+}
+.dock-backdrop-in {
+  animation: dock-backdrop-in 0.3s ease both;
+}

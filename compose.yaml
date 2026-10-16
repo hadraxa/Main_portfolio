@@ -1,0 +1,93 @@
+name: ahad-portfolio
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ahad}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Generate .env.docker with scripts/docker-init.mjs first}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # PostgreSQL has NO host port; only app/migration containers can reach it.
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  migrate:
+    image: ahad-portfolio-migrations:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrations
+    restart: "no"
+    init: true
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ahad}:${POSTGRES_PASSWORD:?Generate .env.docker first}@db:5432/${POSTGRES_DB:-portfolio}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - database
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  app:
+    image: ahad-portfolio-app:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    restart: unless-stopped
+    init: true
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ahad}:${POSTGRES_PASSWORD:?Generate .env.docker first}@db:5432/${POSTGRES_DB:-portfolio}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env.docker}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?Set ADMIN_SESSION_SECRET in .env.docker}
+      # Localhost HTTP only. compose.production.yaml forces this to true for HTTPS.
+      ADMIN_COOKIE_SECURE: ${ADMIN_COOKIE_SECURE:-false}
+    ports:
+      # Loopback binding prevents accidentally publishing an HTTP admin publicly.
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    networks:
+      - database
+      - web
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    stop_grace_period: 30s
+    # HTTP + PostgreSQL healthcheck is inherited from the Dockerfile.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_data:
+
+networks:
+  # Isolate database traffic; this network does not have internet access.
+  database:
+    internal: true
+  web:

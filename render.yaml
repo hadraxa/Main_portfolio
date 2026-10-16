@@ -1,0 +1,35 @@
+# Publish this repository through Render > New > Blueprint.
+# No custom domain purchase is needed: Render assigns an HTTPS onrender.com URL.
+# DATABASE_URL must be a NEW external PostgreSQL database (Neon Free recommended).
+services:
+  - type: web
+    name: ahad-raza-portfolio
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Free services do not support one-off migration jobs or a pre-deploy command.
+    # This command applies pending migrations, then starts the standalone server.
+    dockerCommand: node scripts/hosted-start.mjs
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_COOKIE_SECURE
+        value: "true"
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=384
+      - key: PORT
+        value: "10000"
+      - key: HOSTNAME
+        value: 0.0.0.0

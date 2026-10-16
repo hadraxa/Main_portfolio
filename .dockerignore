@@ -1,0 +1,23 @@
+# Host dependencies and previous builds must not enter the image.
+node_modules
+.next
+out
+coverage
+*.tsbuildinfo
+
+# Never include real credentials, database backups, or Git history.
+.env
+.env.*
+**/.env
+**/.env.*
+.git
+.gitignore
+.vercel
+backups
+*.dump
+*.log
+.DS_Store
+
+# Operational docs and local-only initialization helpers are not app assets.
+*.md
+scripts/docker-init.mjs
