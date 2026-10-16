@@ -1,0 +1,35 @@
+# Add this override only when deploying a real domain with HTTPS:
+# docker compose --env-file .env.docker -f compose.yaml -f compose.production.yaml up -d --build
+services:
+  app:
+    environment:
+      ADMIN_COOKIE_SECURE: "true"
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env.docker to your real domain}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env.docker for TLS certificate notices}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - web
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  caddy_data:
+  caddy_config:

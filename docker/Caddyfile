@@ -1,0 +1,11 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000 {
+		# Flush streamed Next.js responses without buffering them.
+		flush_interval -1
+	}
+}

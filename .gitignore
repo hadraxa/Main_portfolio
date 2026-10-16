@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# Local credentials: keep only the empty template in version control
+.env
+.env.*
+!.env.example
+
+# Local host/editor files and logs
+.vercel/
+.DS_Store
+*.log
+
+# Docker database backups can contain sensitive project/source data.
+backups/
+*.dump
+
+# Safe blank environment templates (real credential files stay ignored).
+!.env.docker.example
+!.env.deploy.example
